@@ -1,0 +1,10 @@
+// Display
+#define TFT_rot   0
+#define TFT_res_W 320
+#define TFT_res_H 480
+
+// Touch offsets
+#define Touch_X_min 0
+#define Touch_X_max 319   // TFT_res_W - 1
+#define Touch_Y_min 0
+#define Touch_Y_max 479   // TFT_res_H - 1
