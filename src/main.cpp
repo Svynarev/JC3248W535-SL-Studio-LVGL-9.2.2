@@ -14,6 +14,15 @@ static Arduino_Canvas gfx(TFT_res_W, TFT_res_H, &g, 0, 0, TFT_rot);
 // ================= Touch =================
 AXS15231B_Touch touch(Touch_SCL, Touch_SDA, Touch_INT, Touch_ADDR, TFT_rot);
 
+// ================= Backlight PWM =================
+#define BL_CHANNEL   0      // LEDC канал (0–15)
+#define BL_FREQ      5000   // Частота ШИМ
+#define BL_RES       8      // Разрядность (0–255)
+
+void setBacklight(uint8_t brightness) {
+    ledcWrite(BL_CHANNEL, brightness);  // 0 = выкл, 255 = макс
+}
+
 // ================= LVGL Tick =================
 uint32_t millis_cb(void) {
     return millis();
@@ -50,25 +59,31 @@ void setup() {
         while (1);
     }
     gfx.fillScreen(BLACK);
-    pinMode(TFT_BL, OUTPUT);
-    digitalWrite(TFT_BL, HIGH);
+
+    // Init backlight (PWM)
+    ledcSetup(BL_CHANNEL, BL_FREQ, BL_RES);
+    ledcAttachPin(TFT_BL, BL_CHANNEL);
+    setBacklight(255);   // включаем подсветку на максимум
 
     // Init touch
     if (!touch.begin()) {
         while (1);
     }
     touch.enOffsetCorrection(true);
-    touch.setOffsets(Touch_X_min, Touch_X_max, TFT_res_W-1, Touch_Y_min, Touch_Y_max, TFT_res_H-1);
+    touch.setOffsets(Touch_X_min, Touch_X_max, TFT_res_W - 1,
+                     Touch_Y_min, Touch_Y_max, TFT_res_H - 1);
 
     // Init LVGL
     lv_init();
     lv_tick_set_cb(millis_cb);
 
-    // Init LVGL display buffer
-    static lv_color_t buf[(TFT_res_W * TFT_res_H) / 10];
+    // Init LVGL display buffer (полоса в 60 строк)
+    static lv_color_t buf[TFT_res_W * 60];
     lv_display_t *disp = lv_display_create(TFT_res_W, TFT_res_H);
     lv_display_set_flush_cb(disp, my_disp_flush);
-    lv_display_set_buffers(disp, buf, NULL, sizeof(buf)/sizeof(lv_color_t), LV_DISPLAY_RENDER_MODE_PARTIAL);
+    lv_display_set_buffers(disp, buf, NULL,
+                           sizeof(buf) / sizeof(lv_color_t),
+                           LV_DISPLAY_RENDER_MODE_PARTIAL);
 
     // Init input device (touch)
     lv_indev_t *indev = lv_indev_create();
@@ -81,7 +96,7 @@ void setup() {
 
 // ================= Loop =================
 void loop() {
-    lv_task_handler();
-    gfx.flush();
-    delay(5);
+    lv_timer_handler();  // обновление LVGL (рекомендуемый API)
+    gfx.flush();         // вывод Canvas на дисплей
+    delay(1);            // небольшая задержка для стабильности
 }
