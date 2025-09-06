@@ -14,15 +14,6 @@ static Arduino_Canvas gfx(TFT_res_W, TFT_res_H, &g, 0, 0, TFT_rot);
 // ================= Touch =================
 AXS15231B_Touch touch(Touch_SCL, Touch_SDA, Touch_INT, Touch_ADDR, TFT_rot);
 
-// ================= LVGL Logging =================
-#if LV_USE_LOG
-void my_print(lv_log_level_t level, const char *buf) {
-    LV_UNUSED(level);
-    Serial.println(buf);
-    Serial.flush();
-}
-#endif
-
 // ================= LVGL Tick =================
 uint32_t millis_cb(void) {
     return millis();
@@ -41,7 +32,6 @@ void my_touchpad_read(lv_indev_t *indev, lv_indev_data_t *data) {
     uint16_t x, y;
     if (touch.touched()) {
         touch.readData(&x, &y);
-        Serial.printf("Touch detected: x=%d, y=%d\n", x, y);
         data->point.x = x;
         data->point.y = y;
         data->state = LV_INDEV_STATE_PRESSED;
@@ -55,21 +45,8 @@ void setup() {
     Serial.begin(115200);
     delay(1000);
 
-    // Проверка PSRAM
-    Serial.println("Checking PSRAM...");
-    if (psramInit()) {
-        Serial.println("PSRAM initialized successfully");
-        Serial.println("Total PSRAM: " + String(ESP.getPsramSize()) + " bytes");
-        Serial.println("Free PSRAM: " + String(ESP.getFreePsram()) + " bytes");
-    } else {
-        Serial.println("PSRAM initialization failed!");
-        while (1);
-    }
-
     // Init display with 50 MHz QSPI
-    Serial.println("Initializing display...");
     if (!gfx.begin(50000000UL)) {
-        Serial.println("Failed to initialize display!");
         while (1);
     }
     gfx.fillScreen(BLACK);
@@ -77,22 +54,15 @@ void setup() {
     digitalWrite(TFT_BL, HIGH);
 
     // Init touch
-    Serial.println("Initializing touch...");
     if (!touch.begin()) {
-        Serial.println("Failed to initialize touch module!");
         while (1);
     }
     touch.enOffsetCorrection(true);
     touch.setOffsets(Touch_X_min, Touch_X_max, TFT_res_W-1, Touch_Y_min, Touch_Y_max, TFT_res_H-1);
 
     // Init LVGL
-    Serial.println("Initializing LVGL...");
     lv_init();
     lv_tick_set_cb(millis_cb);
-
-#if LV_USE_LOG
-    lv_log_register_print_cb(my_print);
-#endif
 
     // Init LVGL display buffer
     static lv_color_t buf[(TFT_res_W * TFT_res_H) / 10];
@@ -106,7 +76,6 @@ void setup() {
     lv_indev_set_read_cb(indev, my_touchpad_read);
 
     // Init UI (SquareLine)
-    Serial.println("Initializing UI...");
     ui_init();
 }
 
@@ -114,12 +83,5 @@ void setup() {
 void loop() {
     lv_task_handler();
     gfx.flush();
-    delay(5); // 200 Hz
-    // Диагностика памяти
-    static uint32_t last_print = 0;
-    if (millis() - last_print > 1000) {
-        Serial.println("Free Heap: " + String(ESP.getFreeHeap()) + " bytes");
-        Serial.println("Free PSRAM: " + String(ESP.getFreePsram()) + " bytes");
-        last_print = millis();
-    }
+    delay(5);
 }
