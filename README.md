@@ -1,6 +1,6 @@
 # ESP32-S3 Touch Display Project for JC3248W535
 
-This project is designed to work with the JC3248W535 (AXS15231B, 320×480, QSPI) touch display, powered by the ESP32-S3-N16R8V microcontroller, using LVGL 9.2.2 and Arduino GFX 1.6.0.
+This project is designed to work with the [JC3248W535](https://www.aliexpress.com/item/1005007566332450.html) (AXS15231B, 320×480, QSPI) touch display, powered by the ESP32-S3-N16R8V microcontroller, using LVGL 9.2.2 and Arduino GFX 1.6.0.
 
 ## 🎯 Purpose
 
