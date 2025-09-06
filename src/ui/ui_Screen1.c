@@ -6,19 +6,7 @@
 #include "ui.h"
 
 lv_obj_t * ui_Screen1 = NULL;
-lv_obj_t * ui_Arc1 = NULL;
-lv_obj_t * ui_Button1 = NULL;
-lv_obj_t * ui_Container1 = NULL;
-lv_obj_t * ui_Checkbox1 = NULL;
-lv_obj_t * ui_Switch1 = NULL;
-lv_obj_t * ui_Spinbox1 = NULL;
 lv_obj_t * ui_Slider1 = NULL;
-lv_obj_t * ui_Spinner1 = NULL;
-lv_obj_t * ui_Chart1 = NULL;
-lv_obj_t * ui_Chart1_Xaxis = NULL;
-lv_obj_t * ui_Chart1_Yaxis1 = NULL;
-lv_obj_t * ui_Chart1_Yaxis2 = NULL;
-lv_obj_t * ui_Bar1 = NULL;
 // event funtions
 
 // build funtions
@@ -29,152 +17,17 @@ void ui_Screen1_screen_init(void)
     lv_obj_remove_flag(ui_Screen1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_add_event_cb(ui_Screen1, scr_unloaded_delete_cb, LV_EVENT_SCREEN_UNLOADED, &ui_Screen1);
 
-    ui_Arc1 = lv_arc_create(ui_Screen1);
-    lv_obj_set_width(ui_Arc1, 150);
-    lv_obj_set_height(ui_Arc1, 150);
-    lv_obj_set_x(ui_Arc1, -27);
-    lv_obj_set_y(ui_Arc1, -113);
-    lv_obj_set_align(ui_Arc1, LV_ALIGN_CENTER);
-    lv_arc_set_value(ui_Arc1, 50);
-
-    ui_Button1 = lv_button_create(ui_Screen1);
-    lv_obj_set_width(ui_Button1, 100);
-    lv_obj_set_height(ui_Button1, 50);
-    lv_obj_set_x(ui_Button1, -52);
-    lv_obj_set_y(ui_Button1, 10);
-    lv_obj_set_align(ui_Button1, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Button1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
-    lv_obj_remove_flag(ui_Button1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-
-    ui_Container1 = lv_obj_create(ui_Screen1);
-    lv_obj_remove_style_all(ui_Container1);
-    lv_obj_set_width(ui_Container1, 100);
-    lv_obj_set_height(ui_Container1, 50);
-    lv_obj_set_x(ui_Container1, -50);
-    lv_obj_set_y(ui_Container1, 13);
-    lv_obj_set_align(ui_Container1, LV_ALIGN_CENTER);
-    lv_obj_remove_flag(ui_Container1, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-
-    ui_Checkbox1 = lv_checkbox_create(ui_Screen1);
-    lv_checkbox_set_text(ui_Checkbox1, "Checkbox");
-    lv_obj_set_width(ui_Checkbox1, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_Checkbox1, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Checkbox1, 77);
-    lv_obj_set_y(ui_Checkbox1, 48);
-    lv_obj_set_align(ui_Checkbox1, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Checkbox1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
-
-    ui_Switch1 = lv_switch_create(ui_Screen1);
-    lv_obj_set_width(ui_Switch1, 50);
-    lv_obj_set_height(ui_Switch1, 25);
-    lv_obj_set_x(ui_Switch1, 104);
-    lv_obj_set_y(ui_Switch1, -46);
-    lv_obj_set_align(ui_Switch1, LV_ALIGN_CENTER);
-
-    ui_Spinbox1 = lv_spinbox_create(ui_Screen1);
-    lv_obj_set_width(ui_Spinbox1, 70);
-    lv_obj_set_height(ui_Spinbox1, 42);
-    lv_obj_set_x(ui_Spinbox1, -92);
-    lv_obj_set_y(ui_Spinbox1, 89);
-    lv_obj_set_align(ui_Spinbox1, LV_ALIGN_CENTER);
-    lv_spinbox_set_digit_format(ui_Spinbox1, 4, 2);
-    lv_spinbox_set_range(ui_Spinbox1, 0, 9999);
-    lv_spinbox_set_cursor_pos(ui_Spinbox1, 1 - 1);
-
     ui_Slider1 = lv_slider_create(ui_Screen1);
-    lv_slider_set_value(ui_Slider1, 0, LV_ANIM_OFF);
+    lv_slider_set_range(ui_Slider1, 0, 255);
+    lv_slider_set_value(ui_Slider1, 128, LV_ANIM_OFF);
     if(lv_slider_get_mode(ui_Slider1) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_Slider1, 0, LV_ANIM_OFF);
     lv_obj_set_width(ui_Slider1, 150);
     lv_obj_set_height(ui_Slider1, 10);
-    lv_obj_set_x(ui_Slider1, 62);
-    lv_obj_set_y(ui_Slider1, 87);
     lv_obj_set_align(ui_Slider1, LV_ALIGN_CENTER);
 
     //Compensating for LVGL9.1 draw crash with bar/slider max value when top-padding is nonzero and right-padding is 0
     if(lv_obj_get_style_pad_top(ui_Slider1, LV_PART_MAIN) > 0) lv_obj_set_style_pad_right(ui_Slider1,
                                                                                               lv_obj_get_style_pad_right(ui_Slider1, LV_PART_MAIN) + 1, LV_PART_MAIN);
-    ui_Spinner1 = lv_spinner_create(ui_Screen1);
-    //lv_spinner_set_anim_params(ui_Spinner1, 1000, 90);
-    lv_obj_set_width(ui_Spinner1, 80);
-    lv_obj_set_height(ui_Spinner1, 80);
-    lv_obj_set_x(ui_Spinner1, 112);
-    lv_obj_set_y(ui_Spinner1, -175);
-    lv_obj_set_align(ui_Spinner1, LV_ALIGN_CENTER);
-    lv_obj_remove_flag(ui_Spinner1, LV_OBJ_FLAG_CLICKABLE);      /// Flags
-
-    ui_Chart1 = lv_chart_create(ui_Screen1);
-    lv_obj_set_width(ui_Chart1, 200);
-    lv_obj_set_height(ui_Chart1, 100);
-    lv_obj_set_x(ui_Chart1, 37);
-    lv_obj_set_y(ui_Chart1, 165);
-    lv_obj_set_align(ui_Chart1, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Chart1, LV_OBJ_FLAG_OVERFLOW_VISIBLE);     /// Flags
-    lv_obj_remove_flag(ui_Chart1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    lv_obj_add_flag(ui_Chart1, LV_OBJ_FLAG_OVERFLOW_VISIBLE);      //make scales visible - Should it be forced to True?
-    //lv_obj_remove_flag( ui_Chart1, LV_OBJ_FLAG_SCROLLABLE );    //no chart-zoom in LVGL9 - Shouldn't it be forced to False?
-    lv_chart_set_type(ui_Chart1, LV_CHART_TYPE_LINE);
-
-    ui_Chart1_Xaxis = lv_scale_create(ui_Chart1);
-    lv_scale_set_mode(ui_Chart1_Xaxis, LV_SCALE_MODE_HORIZONTAL_BOTTOM);
-    lv_obj_set_size(ui_Chart1_Xaxis, lv_pct(100), 50);
-    lv_obj_set_align(ui_Chart1_Xaxis, LV_ALIGN_BOTTOM_MID);
-    lv_obj_set_y(ui_Chart1_Xaxis, 50 + lv_obj_get_style_pad_bottom(ui_Chart1,
-                                                                   LV_PART_MAIN) + lv_obj_get_style_border_width(ui_Chart1, LV_PART_MAIN));
-    lv_obj_set_style_line_width(ui_Chart1_Xaxis, 0, LV_PART_MAIN);
-    lv_obj_set_style_line_width(ui_Chart1_Xaxis, 1, LV_PART_ITEMS);   //LVGL-9.1 ticks are thicker by default
-    lv_obj_set_style_line_width(ui_Chart1_Xaxis, 1, LV_PART_INDICATOR);
-    lv_obj_set_style_length(ui_Chart1_Xaxis, 5, LV_PART_ITEMS);      //minor tick length
-    lv_obj_set_style_length(ui_Chart1_Xaxis, 10, LV_PART_INDICATOR);      //major tick length
-    lv_scale_set_range(ui_Chart1_Xaxis, 0, 5 > 0 ? 5 - 1 : 0);
-    lv_scale_set_total_tick_count(ui_Chart1_Xaxis, (5 > 0 ? 5 - 1 : 0) * 2 + 1);
-    lv_scale_set_major_tick_every(ui_Chart1_Xaxis, 2 >= 1 ? 2 : 1);
-    ui_Chart1_Yaxis1 = lv_scale_create(ui_Chart1);
-    lv_scale_set_mode(ui_Chart1_Yaxis1, LV_SCALE_MODE_VERTICAL_LEFT);
-    lv_obj_set_size(ui_Chart1_Yaxis1, 50, lv_pct(100));
-    lv_obj_set_align(ui_Chart1_Yaxis1, LV_ALIGN_LEFT_MID);
-    lv_obj_set_x(ui_Chart1_Yaxis1, -50 - lv_obj_get_style_pad_left(ui_Chart1,
-                                                                   LV_PART_MAIN) - lv_obj_get_style_border_width(ui_Chart1, LV_PART_MAIN) + 2);
-    lv_obj_set_style_line_width(ui_Chart1_Yaxis1, 0, LV_PART_MAIN);
-    lv_obj_set_style_line_width(ui_Chart1_Yaxis1, 1, LV_PART_ITEMS);
-    lv_obj_set_style_line_width(ui_Chart1_Yaxis1, 1, LV_PART_INDICATOR);
-    lv_obj_set_style_length(ui_Chart1_Yaxis1, 5, LV_PART_ITEMS);   //minor tick length
-    lv_obj_set_style_length(ui_Chart1_Yaxis1, 10, LV_PART_INDICATOR);   //major tick length
-    lv_scale_set_total_tick_count(ui_Chart1_Yaxis1, (5 > 0 ? 5 - 1 : 0) * 2 + 1);
-    lv_scale_set_major_tick_every(ui_Chart1_Yaxis1, 2 >= 1 ? 2 : 1);
-    ui_Chart1_Yaxis2 = lv_scale_create(ui_Chart1);
-    lv_scale_set_mode(ui_Chart1_Yaxis2, LV_SCALE_MODE_VERTICAL_RIGHT);
-    lv_obj_set_size(ui_Chart1_Yaxis2, 25, lv_pct(100));
-    lv_obj_set_align(ui_Chart1_Yaxis2, LV_ALIGN_RIGHT_MID);
-    lv_obj_set_x(ui_Chart1_Yaxis2, 25 + lv_obj_get_style_pad_right(ui_Chart1,
-                                                                   LV_PART_MAIN) + lv_obj_get_style_border_width(ui_Chart1, LV_PART_MAIN) + 1);
-    lv_obj_set_style_line_width(ui_Chart1_Yaxis2, 0, LV_PART_MAIN);
-    lv_obj_set_style_line_width(ui_Chart1_Yaxis2, 1, LV_PART_ITEMS);
-    lv_obj_set_style_line_width(ui_Chart1_Yaxis2, 1, LV_PART_INDICATOR);
-    lv_obj_set_style_length(ui_Chart1_Yaxis2, 5, LV_PART_ITEMS);   //minor tick length
-    lv_obj_set_style_length(ui_Chart1_Yaxis2, 10, LV_PART_INDICATOR);   //major tick length
-    lv_scale_set_total_tick_count(ui_Chart1_Yaxis2, (5 > 0 ? 5 - 1 : 0) * 2 + 1);
-    lv_scale_set_major_tick_every(ui_Chart1_Yaxis2, 2 >= 1 ? 2 : 1);
-    lv_chart_series_t * ui_Chart1_series_1 = lv_chart_add_series(ui_Chart1, lv_color_hex(0x808080),
-                                                                 LV_CHART_AXIS_PRIMARY_Y);
-    static lv_coord_t ui_Chart1_series_1_array[] = { 0, 10, 20, 40, 80, 80, 40, 20, 10, 0 };
-    lv_chart_set_ext_y_array(ui_Chart1, ui_Chart1_series_1, ui_Chart1_series_1_array);
-
-    //This workaround (an invisible outline) is needed because without it chart overflow-visible doesn't work in LVGL-9.1
-    lv_obj_set_style_outline_pad(ui_Chart1, LV_MAX3(50, 50, 25),
-                                 LV_PART_MAIN | LV_STATE_DEFAULT);   //workaround for ineffective 'overflow visible' flag
-    lv_obj_set_style_outline_width(ui_Chart1, -1, LV_PART_MAIN | LV_STATE_DEFAULT);
-    ui_Bar1 = lv_bar_create(ui_Screen1);
-    lv_bar_set_value(ui_Bar1, 25, LV_ANIM_OFF);
-    lv_bar_set_start_value(ui_Bar1, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_Bar1, 150);
-    lv_obj_set_height(ui_Bar1, 10);
-    lv_obj_set_x(ui_Bar1, -42);
-    lv_obj_set_y(ui_Bar1, -217);
-    lv_obj_set_align(ui_Bar1, LV_ALIGN_CENTER);
-
-    //Compensating for LVGL9.1 draw crash with bar/slider max value when top-padding is nonzero and right-padding is 0
-    if(lv_obj_get_style_pad_top(ui_Bar1, LV_PART_MAIN) > 0) lv_obj_set_style_pad_right(ui_Bar1,
-                                                                                           lv_obj_get_style_pad_right(ui_Bar1, LV_PART_MAIN) + 1, LV_PART_MAIN);
 
 }
 
@@ -184,15 +37,6 @@ void ui_Screen1_screen_destroy(void)
 
     // NULL screen variables
     ui_Screen1 = NULL;
-    ui_Arc1 = NULL;
-    ui_Button1 = NULL;
-    ui_Container1 = NULL;
-    ui_Checkbox1 = NULL;
-    ui_Switch1 = NULL;
-    ui_Spinbox1 = NULL;
     ui_Slider1 = NULL;
-    ui_Spinner1 = NULL;
-    ui_Chart1 = NULL;
-    ui_Bar1 = NULL;
 
 }
